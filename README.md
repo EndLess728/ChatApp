@@ -1,6 +1,6 @@
 React-Native expo BoilerPlate
 
-[x Upgrade to expo@51
+[x] Upgrade to expo@51
 [x] Add Redux Toolkit
 [x] Add Translation support 
 [x] Add Light/Dark theme support
