@@ -15,11 +15,37 @@ This boilerplate includes a range of features to kick-start your React Native de
 - [ ] Add multiple environment support
 - [ ] Add Network Reachability support
 
-## Authors
+## Run Locally
 
-This project is maintained by:
+Clone the project
 
-- [@EndLess728](https://www.github.com/EndLess728)
+```bash
+  git clone https://github.com/EndLess728/React-Native-Expo-Boilterplate.git
+```
+
+Go to the project directory
+
+```bash
+  cd React-Native-Expo-BoilterPlate
+```
+
+Install dependencies
+
+```bash
+  yarn install
+```
+
+Run build on android
+
+```bash
+  yarn android
+```
+
+Run build on ios
+
+```bash
+  yarn ios
+```
 
 ## Acknowledgements
 
@@ -29,3 +55,9 @@ We would like to thank the following resources and individuals for their contrib
 - [Expo Documentation](https://docs.expo.dev/)
 - [React Native Advanced Guide](https://github.com/anisurrahman072/React-Native-Advanced-Guide)
 - [Awesome React Native Animations by @Catalin Miron](https://www.animatereactnative.com/)
+
+## Authors
+
+This project is maintained by:
+
+- [@EndLess728](https://www.github.com/EndLess728)
