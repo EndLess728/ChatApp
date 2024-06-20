@@ -14,6 +14,7 @@ This boilerplate includes a range of features to kick-start your React Native de
 - [ ] Add EAS Workflow
 - [ ] Add multiple environment support
 - [ ] Add Network Reachability support
+- [ ] Add Support for animated splash screen (Lottie/Video)
 
 ## Run Locally
 
