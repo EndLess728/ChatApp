@@ -6,20 +6,22 @@ import { useNavigation } from "@react-navigation/native";
 import { NAVIGATION } from "@/constants";
 import auth from "@react-native-firebase/auth";
 import FullscreenLoader from "@/components/FullScreenLoader";
+import { useDispatch } from "react-redux";
+import { saveUserInfo } from "@/redux/slices/authSlicer";
 export const Login = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onLogin = () => {
-    console.log("pressed login");
     setIsLoading(true);
     auth()
       .signInWithEmailAndPassword(email, password)
       .then((resp) => {
-        console.log("print JSON response ==>", JSON.stringify(resp));
+        dispatch(saveUserInfo(resp?.user));
         setIsLoading(false);
         setEmail("");
         setPassword("");

@@ -35,8 +35,3 @@ Button.propTypes = {
   textStyle: PropTypes.object,
   title: PropTypes.string.isRequired,
 };
-
-Button.defaultProps = {
-  style: null,
-  textStyle: null,
-};

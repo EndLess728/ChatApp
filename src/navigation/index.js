@@ -13,10 +13,13 @@ import { useFonts } from "expo-font";
 SplashScreen.preventAutoHideAsync();
 
 export function RootNavigator() {
-  const user = useSelector((s) => s.auth.user);
+  const user = useSelector((state) => state.auth.user);
+  console.log("print JSON response ==>", JSON.stringify(user));
   const scheme = useColorScheme();
 
-  const isUserLoggedIn = !!user?.username;
+  const isUserLoggedIn = user?.uid;
+
+  console.log("user is logged in", user);
 
   const [fontsLoaded, fontError] = useFonts(customFontsToLoad);
 

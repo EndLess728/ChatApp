@@ -1,38 +1,33 @@
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {useTheme} from '@react-navigation/native';
-import React from 'react';
-import {TabBarIcon} from '@/components';
-import {NAVIGATION} from '@/constants';
-import {HomeNavigator} from '@/navigation/HomeNavigator';
-import {ProfileNavigator} from '@/navigation/ProfileNavigator';
-import {TabBarLabel} from '@/components/TabBarLabel';
+import React from "react";
+import { NAVIGATION } from "@/constants";
+import { ChatList, Conversation, Login, Signup } from "@/screens";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Text } from "react-native";
+import { TouchableOpacity } from "react-native";
 
-const Tab = createBottomTabNavigator();
+const Stack = createNativeStackNavigator();
 
 export function AppNavigator() {
-  const {colors} = useTheme();
-
-  const renderTabIcon = (color, route) => (
-    <TabBarIcon color={color} routeName={route.name} />
-  );
-  const renderTabLabel = (color, route) => (
-    <TabBarLabel color={color} routeName={route.name} />
-  );
-
   return (
-    <Tab.Navigator
-      screenOptions={({route}) => ({
-        tabBarActiveTintColor: colors.activeTab,
-        tabBarInactiveTintColor: colors.inactiveTab,
-        headerShown: false,
-        tabBarIcon: ({color}) => renderTabIcon(color, route),
-        tabBarLabel: ({color}) => renderTabLabel(color, route),
-      })}>
-      <Tab.Screen name={NAVIGATION.homeNavigator} component={HomeNavigator} />
-      <Tab.Screen
-        name={NAVIGATION.profileNavigator}
-        component={ProfileNavigator}
+    <Stack.Navigator>
+      <Stack.Screen
+        component={ChatList}
+        name={NAVIGATION.chatList}
+        options={{
+          headerShown: true,
+          headerTitle: "Chats",
+          headerRight: () => (
+            <TouchableOpacity onPress={() => alert("pressed logout")}>
+              <Text>Logout</Text>
+            </TouchableOpacity>
+          ),
+        }}
       />
-    </Tab.Navigator>
+      <Stack.Screen
+        component={Conversation}
+        name={NAVIGATION.conversation}
+        options={{ headerShown: true }}
+      />
+    </Stack.Navigator>
   );
 }
