@@ -2,42 +2,52 @@ import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import { fonts } from "@/theme";
 import { Button, TextField } from "@/components";
-import { useNavigation } from "@react-navigation/native";
-import { NAVIGATION } from "@/constants";
 import auth from "@react-native-firebase/auth";
 import FullscreenLoader from "@/components/FullScreenLoader";
-export const Login = () => {
-  const navigation = useNavigation();
-
+import {
+  validateEmail,
+  validatePasswordLength,
+} from "@/utils/ValidationFunctions";
+export const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const onLogin = () => {
-    console.log("pressed login");
-    setIsLoading(true);
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((resp) => {
-        console.log("print JSON response ==>", JSON.stringify(resp));
-        setIsLoading(false);
-        setEmail("");
-        setPassword("");
-        console.log("signed in!");
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (error.code === "auth/invalid-credential") {
-          console.log("The credentials are invalid!");
-          alert("The credentials are invalid!");
-        }
+  const onSignup = () => {
+    if (email == "") {
+      alert("Please enter your email");
+    } else if (!validateEmail(email)) {
+      alert("Email is not valid");
+    } else if (password == "") {
+      alert("Please enter your password");
+    } else if (!validatePasswordLength(password)) {
+      alert("Password must be at least of 6 characters");
+    } else {
+      setIsLoading(true);
+      auth()
+        .createUserWithEmailAndPassword(email, password)
+        .then((resp) => {
+          console.log("print JSON response ==>", JSON.stringify(resp));
+          setIsLoading(false);
+          setEmail("");
+          setPassword("");
+          console.log("User account created & signed in!");
+        })
+        .catch((error) => {
+          setIsLoading(false);
+          if (error.code === "auth/email-already-in-use") {
+            console.log("That email address is already in use!");
+            alert("That email address is already in use!");
+          }
 
-        console.error(error);
-      });
-  };
+          if (error.code === "auth/invalid-email") {
+            console.log("That email address is invalid!");
+            alert("That email address is invalid!");
+          }
 
-  const onCreateAccount = () => {
-    navigation.navigate(NAVIGATION.signup);
+          console.error(error);
+        });
+    }
   };
 
   return (
@@ -60,11 +70,7 @@ export const Login = () => {
         />
       </View>
 
-      <Button onPress={onLogin} style={styles.button} title={"Login"} />
-
-      <Text style={styles.createAccountBtn} onPress={onCreateAccount}>
-        Don't have account? Signup
-      </Text>
+      <Button onPress={onSignup} style={styles.button} title={"Signup"} />
 
       <FullscreenLoader visible={isLoading} />
     </View>
@@ -72,17 +78,11 @@ export const Login = () => {
 };
 
 const styles = StyleSheet.create({
-  createAccountBtn: {
-    fontSize: 15,
-    fontFamily: fonts.openSan.semiBold,
-    marginTop: 20,
-  },
   button: { marginHorizontal: 10, height: 55, marginTop: 20 },
   screenTitle: {
     fontSize: 30,
     color: "teal",
     fontFamily: fonts.openSan.bold,
-    marginBottom: 50,
   },
   container: {
     flex: 1,

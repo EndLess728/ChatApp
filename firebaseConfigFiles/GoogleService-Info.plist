@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>API_KEY</key>
+	<string>AIzaSyDC814G1G9fntFgIFWQ2mJ7-oMtMkDUnd4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1079317452154</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.expo.template</string>
+	<key>PROJECT_ID</key>
+	<string>chatapp-596f7</string>
+	<key>STORAGE_BUCKET</key>
+	<string>chatapp-596f7.firebasestorage.app</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1079317452154:ios:376fc9448b5ae24d3df2c3</string>
+	<key>CLIENT_ID</key>
+	<string>123456789012-asdfasdfasdfasdfsdfasdfasdfasdf.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.123456789012-asdfasdfasdfasdfsdfasdfasdfasdf</string>
+</dict>
+</plist>

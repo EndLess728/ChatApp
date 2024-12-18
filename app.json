@@ -14,18 +14,25 @@
     "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.expo.template"
+      "bundleIdentifier": "com.expo.template",
+      "googleServicesFile": "./firebaseConfigFiles/GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.expo.template"
+      "package": "com.expo.template",
+      "googleServicesFile": "./firebaseConfigFiles/google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["expo-localization", "expo-font"]
+    "plugins": [
+      "expo-localization",
+      "expo-font",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth"
+    ]
   }
 }

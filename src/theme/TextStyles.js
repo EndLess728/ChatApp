@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { fonts } from "./fonts";
 
 export const TextStyles = StyleSheet.create({
   title: {
@@ -7,11 +8,11 @@ export const TextStyles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    fontWeight: "400",
+    fontFamily: fonts.openSan.regular,
   },
   label: {
     fontSize: 16,
-    fontWeight: "700",
+    fontFamily: fonts.openSan.semiBold,
   },
   error: {
     fontSize: 14,

@@ -27,7 +27,3 @@ export function TextField({ style, ...rest }) {
 TextField.propTypes = {
   style: PropTypes.object,
 };
-
-TextField.defaultProps = {
-  style: null,
-};
