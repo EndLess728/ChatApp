@@ -1,0 +1,5 @@
+export const COLLECTION = {
+  USERS: "USERS",
+  CHAT_ROOM: "CHAT_ROOM",
+  MESSAGES: "MESSAGES",
+};

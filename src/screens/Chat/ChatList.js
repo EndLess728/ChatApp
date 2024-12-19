@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import { useRecentChatRooms } from "@/hooks/useRecentChatRooms";
 import FullscreenLoader from "@/components/FullScreenLoader";
+import { COLLECTION } from "@/constants/firebaseConstants";
 
 const DUMMY_PROFILE_IMAGE = "https://via.placeholder.com/50";
 
@@ -25,8 +26,9 @@ export const ChatList = () => {
   const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const user = firebase.auth().currentUser;
-  const { data: userList, loading: loadingUserList } =
-    useFirestoreCollection("USERS");
+  const { data: userList, loading: loadingUserList } = useFirestoreCollection(
+    COLLECTION.USERS
+  );
   const { chatRooms, loading: loadingChatRooms } = useRecentChatRooms();
 
   const renderChatItem = ({ item }) => {

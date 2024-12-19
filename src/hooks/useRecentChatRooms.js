@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import firestore from "@react-native-firebase/firestore";
 import { firebase } from "@react-native-firebase/auth";
+import { COLLECTION } from "@/constants/firebaseConstants";
 
 export const useRecentChatRooms = () => {
   const [chatRooms, setChatRooms] = useState([]);
@@ -16,7 +17,7 @@ export const useRecentChatRooms = () => {
       return;
     }
 
-    const chatroomsRef = firestore().collection("CHAT_ROOM");
+    const chatroomsRef = firestore().collection(COLLECTION.CHAT_ROOM);
 
     // Listen for real-time changes to the CHAT_ROOM collection
     const unsubscribe = chatroomsRef

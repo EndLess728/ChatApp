@@ -10,6 +10,7 @@ import {
   validatePasswordLength,
 } from "@/utils/ValidationFunctions";
 import { useNavigation } from "@react-navigation/native";
+import { COLLECTION } from "@/constants/firebaseConstants";
 
 export const Signup = () => {
   const [form, setForm] = useState({ userName: "", email: "", password: "" });
@@ -33,7 +34,7 @@ export const Signup = () => {
 
   const createUserInFirestore = async (user) => {
     try {
-      await firestore().collection("USERS").doc(user.uid).set({
+      await firestore().collection(COLLECTION.USERS).doc(user.uid).set({
         email: user.email,
         uid: user.uid,
         name: form.userName,
@@ -59,7 +60,6 @@ export const Signup = () => {
         form.email,
         form.password
       );
-      console.log("print signup response ==>", JSON.stringify(userCredential));
       await createUserInFirestore(userCredential.user);
       console.log("User account created!");
       alert("User account created successfully");

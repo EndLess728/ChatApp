@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import firestore from "@react-native-firebase/firestore";
+import { COLLECTION } from "@/constants/firebaseConstants";
 
 const useChat = (userId, otherUserId) => {
   const [messages, setMessages] = useState([]);
@@ -12,7 +13,7 @@ const useChat = (userId, otherUserId) => {
   // Create a chatroom in Firestore if it doesn't exist
   const createChatroomIfNotExists = async () => {
     const chatroomRef = firestore()
-      .collection("CHAT_ROOM")
+      .collection(COLLECTION.CHAT_ROOM)
       .doc(getChatroomId(userId, otherUserId));
 
     const chatroomDoc = await chatroomRef.get();
@@ -28,9 +29,9 @@ const useChat = (userId, otherUserId) => {
   // Fetch messages from Firestore
   const fetchMessages = () => {
     const chatroomRef = firestore()
-      .collection("CHAT_ROOM")
+      .collection(COLLECTION.CHAT_ROOM)
       .doc(getChatroomId(userId, otherUserId))
-      .collection("MESSAGES")
+      .collection(COLLECTION.MESSAGES)
       .orderBy("createdAt", "desc");
 
     return chatroomRef.onSnapshot((snapshot) => {
@@ -48,10 +49,10 @@ const useChat = (userId, otherUserId) => {
       const messageToSend = newMessage;
 
       const chatroomRef = firestore()
-        .collection("CHAT_ROOM")
+        .collection(COLLECTION.CHAT_ROOM)
         .doc(getChatroomId(userId, otherUserId));
 
-      await chatroomRef.collection("MESSAGES").add({
+      await chatroomRef.collection(COLLECTION.MESSAGES).add({
         text: messageToSend,
         sender: userId,
         createdAt: firestore.FieldValue.serverTimestamp(),
