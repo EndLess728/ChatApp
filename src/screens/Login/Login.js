@@ -1,96 +1,108 @@
-import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
-import { fonts } from "@/theme";
-import { Button, TextField } from "@/components";
+import { StyleSheet, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { NAVIGATION } from "@/constants";
+import { useDispatch } from "react-redux";
 import auth from "@react-native-firebase/auth";
 import FullscreenLoader from "@/components/FullScreenLoader";
-import { useDispatch } from "react-redux";
+import { Button, TextField } from "@/components";
 import { saveUserInfo } from "@/redux/slices/authSlicer";
+import { NAVIGATION } from "@/constants";
+import { fonts } from "@/theme";
+
 export const Login = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ email: "", password: "" });
   const [isLoading, setIsLoading] = useState(false);
 
-  const onLogin = () => {
-    setIsLoading(true);
-    auth()
-      .signInWithEmailAndPassword(email, password)
-      .then((resp) => {
-        dispatch(saveUserInfo(resp?.user));
-        setIsLoading(false);
-        setEmail("");
-        setPassword("");
-        console.log("signed in!");
-      })
-      .catch((error) => {
-        setIsLoading(false);
-        if (error.code === "auth/invalid-credential") {
-          console.log("The credentials are invalid!");
-          alert("The credentials are invalid!");
-        }
-
-        console.error(error);
-      });
+  const handleInputChange = (field, value) => {
+    setForm({ ...form, [field]: value });
   };
 
-  const onCreateAccount = () => {
+  const handleLogin = async () => {
+    setIsLoading(true);
+    try {
+      const userCredential = await auth().signInWithEmailAndPassword(
+        form.email,
+        form.password
+      );
+      dispatch(saveUserInfo(userCredential?.user));
+      setForm({ email: "", password: "" });
+      console.log("User signed in!");
+    } catch (error) {
+      handleAuthError(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleAuthError = (error) => {
+    if (error.code === "auth/invalid-credential") {
+      alert("The credentials are invalid!");
+    } else {
+      alert("An error occurred. Please try again.");
+    }
+    console.error("Auth error: ", error);
+  };
+
+  const handleSignupNavigation = () => {
     navigation.navigate(NAVIGATION.signup);
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.screenTitle}>Chat App</Text>
-      <View style={{ width: "90%" }}>
+      <View style={styles.inputContainer}>
         <TextField
           autoCapitalize="none"
-          onChangeText={setEmail}
-          placeholder={"Enter your email"}
-          value={email}
+          onChangeText={(value) => handleInputChange("email", value)}
+          placeholder="Enter your email"
+          value={form.email}
         />
         <TextField
           secureTextEntry
           autoCapitalize="none"
-          onChangeText={setPassword}
-          placeholder={"Enter your password"}
+          onChangeText={(value) => handleInputChange("password", value)}
+          placeholder="Enter your password"
           textContentType="password"
-          value={password}
+          value={form.password}
         />
       </View>
-
-      <Button onPress={onLogin} style={styles.button} title={"Login"} />
-
-      <Text style={styles.createAccountBtn} onPress={onCreateAccount}>
-        Don't have account? Signup
+      <Button onPress={handleLogin} style={styles.button} title="Login" />
+      <Text style={styles.createAccountBtn} onPress={handleSignupNavigation}>
+        Don't have an account? Signup
       </Text>
-
       <FullscreenLoader visible={isLoading} />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  createAccountBtn: {
-    fontSize: 15,
-    fontFamily: fonts.openSan.semiBold,
-    marginTop: 20,
-  },
-  button: { marginHorizontal: 10, height: 55, marginTop: 20 },
-  screenTitle: {
-    fontSize: 30,
-    color: "teal",
-    fontFamily: fonts.openSan.bold,
-    marginBottom: 50,
-  },
   container: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: "white",
     paddingHorizontal: 30,
+  },
+  screenTitle: {
+    fontSize: 30,
+    color: "teal",
+    fontFamily: fonts.openSan.bold,
+    marginBottom: 50,
+  },
+  inputContainer: {
+    width: "90%",
+  },
+  button: {
+    marginHorizontal: 10,
+    height: 55,
+    marginTop: 20,
+  },
+  createAccountBtn: {
+    fontSize: 15,
+    fontFamily: fonts.openSan.semiBold,
+    marginTop: 20,
   },
 });

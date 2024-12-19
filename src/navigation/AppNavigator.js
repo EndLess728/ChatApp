@@ -1,9 +1,8 @@
 import React from "react";
 import { NAVIGATION } from "@/constants";
-import { ChatList, Conversation, Login, Signup } from "@/screens";
+import { ChatList, Conversation } from "@/screens";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Text } from "react-native";
-import { TouchableOpacity } from "react-native";
+import LogoutButton from "@/components/LogoutButton";
 
 const Stack = createNativeStackNavigator();
 
@@ -16,11 +15,7 @@ export function AppNavigator() {
         options={{
           headerShown: true,
           headerTitle: "Chats",
-          headerRight: () => (
-            <TouchableOpacity onPress={() => alert("pressed logout")}>
-              <Text>Logout</Text>
-            </TouchableOpacity>
-          ),
+          headerRight: () => <LogoutButton />,
         }}
       />
       <Stack.Screen

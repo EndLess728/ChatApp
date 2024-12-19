@@ -8,5 +8,5 @@ export function validateEmail(email) {
 
 export function validatePasswordLength(password) {
   // Check if the password length is exactly 6 characters
-  return password.length === 6;
+  return password.length >= 6;
 }
