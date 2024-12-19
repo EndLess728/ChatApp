@@ -96,9 +96,13 @@ export const Conversation = () => {
         .collection("CHAT_ROOM")
         .doc(getChatroomId(userId, otherUserId))
         .collection("MESSAGES");
-      // chatroomRef();
     };
   }, []);
+
+  useEffect(() => {
+    // After messages are updated, ensure that the FlatList scrolls to the bottom
+    flatListRef.current?.scrollToEnd({ animated: true });
+  }, [messages]); // Run this when messages change
 
   const renderMessage = ({ item }) => (
     <View
@@ -122,7 +126,6 @@ export const Conversation = () => {
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.chatContainer}
-        inverted // This ensures that the messages are shown starting from the bottom
       />
       <View style={styles.inputContainer}>
         <TextInput
