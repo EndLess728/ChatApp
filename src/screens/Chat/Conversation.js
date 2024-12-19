@@ -12,97 +12,30 @@ import {
   Platform,
 } from "react-native";
 import { useRoute } from "@react-navigation/native"; // For fetching the selected user ID
-import firestore from "@react-native-firebase/firestore";
+import useChat from "@/hooks/useChat";
 
 export const Conversation = () => {
   const route = useRoute();
-  const { userId, otherUserId } = route.params; // Assuming you're passing userId and otherUserId
-  const [messages, setMessages] = useState([]);
+  const { userId, otherUserId } = route.params;
   const [newMessage, setNewMessage] = useState("");
-  const flatListRef = useRef(null); // Reference for FlatList
+  const flatListRef = useRef(null);
 
-  // Create a chatroom in Firestore if it doesn't exist
-  const createChatroomIfNotExists = async () => {
-    const chatroomRef = firestore()
-      .collection("CHAT_ROOM")
-      .doc(getChatroomId(userId, otherUserId));
+  const { messages, sendMessage } = useChat(userId, otherUserId);
 
-    const chatroomDoc = await chatroomRef.get();
-    if (!chatroomDoc.exists) {
-      // Create a new chatroom with no messages initially
-      await chatroomRef.set({
-        users: [userId, otherUserId],
-        createdAt: firestore.FieldValue.serverTimestamp(),
+  const handleSendMessage = () => {
+    sendMessage(newMessage); // Send message using the hook
+    setNewMessage("");
+  };
+
+  // Scroll to the bottom when the messages change
+  useEffect(() => {
+    if (messages.length > 0) {
+      flatListRef.current?.scrollToIndex({
+        index: 0,
+        animated: true,
       });
     }
-  };
-
-  // Get the chatroom ID using both user IDs to ensure uniqueness
-  const getChatroomId = (user1, user2) => {
-    return user1 < user2 ? `${user1}_${user2}` : `${user2}_${user1}`;
-  };
-
-  // Fetch messages from Firestore
-  const fetchMessages = () => {
-    const chatroomRef = firestore()
-      .collection("CHAT_ROOM")
-      .doc(getChatroomId(userId, otherUserId))
-      .collection("MESSAGES")
-      .orderBy("createdAt", "asc");
-
-    chatroomRef.onSnapshot((snapshot) => {
-      const fetchedMessages = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setMessages(fetchedMessages);
-    });
-  };
-
-  // Send message to Firestore
-  const sendMessage = async () => {
-    if (newMessage.trim()) {
-      const chatroomRef = firestore()
-        .collection("CHAT_ROOM")
-        .doc(getChatroomId(userId, otherUserId));
-
-      // Add the message to the MESSAGES subcollection
-      await chatroomRef.collection("MESSAGES").add({
-        text: newMessage,
-        sender: userId,
-        createdAt: firestore.FieldValue.serverTimestamp(),
-      });
-
-      // Update the lastMessage field in the chat room document
-      await chatroomRef.update({
-        lastMessage: newMessage,
-        lastMessageAt: firestore.FieldValue.serverTimestamp(), // Optionally track the time of the last message
-      });
-
-      setNewMessage(""); // Clear the input field
-
-      // After sending the message, scroll to the bottom
-      flatListRef.current?.scrollToEnd({ animated: true });
-    }
-  };
-
-  useEffect(() => {
-    createChatroomIfNotExists(); // Ensure the chatroom is created
-    fetchMessages(); // Start listening for new messages
-
-    return () => {
-      // Cleanup listener on unmount
-      const chatroomRef = firestore()
-        .collection("CHAT_ROOM")
-        .doc(getChatroomId(userId, otherUserId))
-        .collection("MESSAGES");
-    };
-  }, []);
-
-  useEffect(() => {
-    // After messages are updated, ensure that the FlatList scrolls to the bottom
-    flatListRef.current?.scrollToEnd({ animated: true });
-  }, [messages]); // Run this when messages change
+  }, [messages]);
 
   const renderMessage = ({ item }) => (
     <View
@@ -121,11 +54,12 @@ export const Conversation = () => {
       behavior={Platform.OS === "ios" ? "padding" : undefined}
     >
       <FlatList
-        ref={flatListRef} // Attach the ref to FlatList
+        ref={flatListRef}
         data={messages}
         renderItem={renderMessage}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.chatContainer}
+        inverted // This ensures that the messages are shown starting from the bottom
       />
       <View style={styles.inputContainer}>
         <TextInput
@@ -134,7 +68,7 @@ export const Conversation = () => {
           value={newMessage}
           onChangeText={setNewMessage}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+        <TouchableOpacity style={styles.sendButton} onPress={handleSendMessage}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
@@ -150,7 +84,7 @@ const styles = StyleSheet.create({
   chatContainer: {
     paddingHorizontal: ms(10),
     paddingTop: ms(10),
-    paddingBottom: ms(50), // This ensures there's space at the bottom when you add a new message
+    paddingBottom: ms(50),
   },
   messageContainer: {
     marginVertical: ms(5),
